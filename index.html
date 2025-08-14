@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Server Status</title>
+<style>
+body { font-family: monospace; text-align: center; background: #121212; color: #e0e0e0; }
+table { margin: 2em auto; border-collapse: collapse; width: 60%; }
+th, td { border: 1px solid #333; padding: 0.5em 1em; }
+th { background: #222; }
+tr:nth-child(even) { background: #1a1a1a; }
+</style>
+</head>
+<body>
+<h1>Game Server Status (NA1–NA15)</h1>
+<table id="statusTable">
+<thead>
+<tr><th>Server</th><th>Status</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+<script>
+const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
+const sheetName = 'Sheet1';
+const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&headers=1`;
+
+async function fetchStatuses() {
+    try {
+        const res = await fetch(url);
+        const text = await res.text();
+        const jsonText = text.match(/google\.visualization\.Query\.setResponse\((.*)\)/s)[1];
+        const data = JSON.parse(jsonText).table.rows;
+
+        const tbody = document.querySelector('#statusTable tbody');
+        tbody.innerHTML = '';
+        data.forEach(row => {
+            const server = row.c[0]?.v || '';
+            const status = row.c[1]?.v || '';
+            if(server) tbody.innerHTML += `<tr><td>${server}</td><td>${status}</td></tr>`;
+        });
+    } catch(e) { console.error(e); }
+}
+
+fetchStatuses();
+setInterval(fetchStatuses, 30000);
+</script>
+</body>
+</html>
