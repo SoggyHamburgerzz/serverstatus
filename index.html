@@ -62,7 +62,7 @@ tr:nth-child(even) {
 /* Column widths inside table */
 th:nth-child(1), td:nth-child(1) { width: 10%; } /* Server column small */
 th:nth-child(2), td:nth-child(2) { width: 45%; } /* Status column */
-th:nth-child(3), td:nth-child(3) { width: 45%; } /* Extra column */
+th:nth-child(3), td:nth-child(3) { width: 45%; } /* details column */
 </style>
 </head>
 <body>
@@ -71,7 +71,7 @@ th:nth-child(3), td:nth-child(3) { width: 45%; } /* Extra column */
     <h1>The Isle Servers</h1>
     <table id="statusTable">
       <thead>
-        <tr><th>Server</th><th>Status</th><th>Extra</th></tr>
+        <tr><th>Server</th><th>Status</th><th>Details</th></tr>
       </thead>
       <tbody>
         <tr><td></td><td></td><td></td></tr> <!-- initial empty row -->
@@ -107,9 +107,9 @@ async function fetchStatuses() {
     data.forEach(row => {
       const server = row.c[0]?.v || '';
       const status = row.c[1]?.v || '';
-      const extra = row.c[2]?.v || '';
-      if(server || status || extra) {
-        tbody.innerHTML += `<tr><td>${server}</td><td>${status}</td><td>${extra}</td></tr>`;
+      const details = row.c[2]?.v || '';
+      if(server || status || details) {
+        tbody.innerHTML += `<tr><td>${server}</td><td>${status}</td><td>${details}</td></tr>`;
       }
     });
 
