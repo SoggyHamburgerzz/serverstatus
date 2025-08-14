@@ -18,16 +18,31 @@ body {
   min-height: 100vh;
 }
 
-/* Table column */
-.main {
-  width: 50%;
-  margin: 0 auto;
+/* Left sidebar: table */
+.sidebar-left {
+  width: 25%;
   padding: 2em;
+  background: #1a1a1a;
 }
 
+/* Middle empty space */
+.middle {
+  width: 50%;
+  background: #121212; /* same as body */
+}
+
+/* Right sidebar: links */
+.sidebar-right {
+  width: 25%;
+  padding: 2em;
+  background: #1e1e1e;
+}
+
+/* Table styling */
 table {
-  width: 80%;
+  width: 100%;
   border-collapse: collapse;
+  margin: 0 auto;
 }
 
 th, td {
@@ -36,49 +51,37 @@ th, td {
   text-align: center;
 }
 
-
 th {
   background: #222;
 }
 
 tr:nth-child(even) {
-  background: #1a1a1a;
+  background: #121212;
 }
 
+/* Column widths inside table */
 th:nth-child(1), td:nth-child(1) { width: 10%; } /* Server column small */
-th:nth-child(2), td:nth-child(2) { width: 60%; } /* Status column large */
-
-/* Sidebar */
-.sidebar {
-  width: 25%;
-  background: #1e1e1e;
-  padding: 2em;
-}
-
-.sidebar a {
-  display: block;
-  color: #00bfff;
-  text-decoration: none;
-  margin-bottom: 1em;
-}
-
-.sidebar a:hover {
-  text-decoration: underline;
-}
+th:nth-child(2), td:nth-child(2) { width: 45%; } /* Status column */
+th:nth-child(3), td:nth-child(3) { width: 45%; } /* Extra column */
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="main">
+  <div class="sidebar-left">
     <h1>The Isle Servers</h1>
     <table id="statusTable">
       <thead>
-        <tr><th>Server</th><th>Status</th></tr>
+        <tr><th>Server</th><th>Status</th><th>Extra</th></tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+        <tr><td></td><td></td><td></td></tr> <!-- initial empty row -->
+      </tbody>
     </table>
   </div>
-  <div class="sidebar">
+  
+  <div class="middle"></div>
+  
+  <div class="sidebar-right">
     <h2>Useful Links</h2>
     <a href="https://www.example.com" target="_blank">Example Site 1</a>
     <a href="https://www.example2.com" target="_blank">Example Site 2</a>
@@ -100,12 +103,22 @@ async function fetchStatuses() {
 
     const tbody = document.querySelector('#statusTable tbody');
     tbody.innerHTML = '';
+
     data.forEach(row => {
       const server = row.c[0]?.v || '';
       const status = row.c[1]?.v || '';
-      if(server) tbody.innerHTML += `<tr><td>${server}</td><td>${status}</td></tr>`;
+      const extra = row.c[2]?.v || '';
+      if(server || status || extra) {
+        tbody.innerHTML += `<tr><td>${server}</td><td>${status}</td><td>${extra}</td></tr>`;
+      }
     });
-  } catch(e) { console.error(e); }
+
+    // always add an empty row at the bottom
+    tbody.innerHTML += '<tr><td></td><td></td><td></td></tr>';
+
+  } catch(e) {
+    console.error(e);
+  }
 }
 
 fetchStatuses();
