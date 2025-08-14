@@ -2,45 +2,107 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Server Status</title>
+<title>The Isle Servers</title>
 <style>
-body { font-family: monospace; text-align: center; background: #121212; color: #e0e0e0; }
-table { margin: 2em auto; border-collapse: collapse; width: 60%; }
-th, td { border: 1px solid #333; padding: 0.5em 1em; }
-th { background: #222; }
-tr:nth-child(even) { background: #1a1a1a; }
-th:nth-child(1), td:nth-child(1) { width: 10%; }
-th:nth-child(2), td:nth-child(2) { width: 50%; }
+body {
+  font-family: monospace;
+  background: #121212;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Table column */
+.main {
+  width: 50%;
+  padding: 2em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #333;
+  padding: 0.5em 1em;
+}
+
+th {
+  background: #222;
+}
+
+tr:nth-child(even) {
+  background: #1a1a1a;
+}
+
+th:nth-child(1), td:nth-child(1) { width: 10%; } /* Server column small */
+th:nth-child(2), td:nth-child(2) { width: 90%; } /* Status column large */
+
+/* Sidebar */
+.sidebar {
+  width: 50%;
+  background: #1e1e1e;
+  padding: 2em;
+}
+
+.sidebar a {
+  display: block;
+  color: #00bfff;
+  text-decoration: none;
+  margin-bottom: 1em;
+}
+
+.sidebar a:hover {
+  text-decoration: underline;
+}
 </style>
 </head>
 <body>
-<h1>The Isle Servers</h1>
-<table id="statusTable">
-<thead>
-<tr><th>Server</th><th>Status</th></tr>
-</thead>
-<tbody></tbody>
-</table>
+<div class="container">
+  <div class="main">
+    <h1>The Isle Servers</h1>
+    <table id="statusTable">
+      <thead>
+        <tr><th>Server</th><th>Status</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="sidebar">
+    <h2>Useful Links</h2>
+    <a href="https://www.example.com" target="_blank">Example Site 1</a>
+    <a href="https://www.example2.com" target="_blank">Example Site 2</a>
+    <a href="https://www.example3.com" target="_blank">Example Site 3</a>
+  </div>
+</div>
+
 <script>
 const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
 const sheetName = 'Sheet1';
 const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&headers=1`;
 
 async function fetchStatuses() {
-    try {
-        const res = await fetch(url);
-        const text = await res.text();
-        const jsonText = text.match(/google\.visualization\.Query\.setResponse\((.*)\)/s)[1];
-        const data = JSON.parse(jsonText).table.rows;
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    const jsonText = text.match(/google\.visualization\.Query\.setResponse\((.*)\)/s)[1];
+    const data = JSON.parse(jsonText).table.rows;
 
-        const tbody = document.querySelector('#statusTable tbody');
-        tbody.innerHTML = '';
-        data.forEach(row => {
-            const server = row.c[0]?.v || '';
-            const status = row.c[1]?.v || '';
-            if(server) tbody.innerHTML += `<tr><td>${server}</td><td>${status}</td></tr>`;
-        });
-    } catch(e) { console.error(e); }
+    const tbody = document.querySelector('#statusTable tbody');
+    tbody.innerHTML = '';
+    data.forEach(row => {
+      const server = row.c[0]?.v || '';
+      const status = row.c[1]?.v || '';
+      if(server) tbody.innerHTML += `<tr><td>${server}</td><td>${status}</td></tr>`;
+    });
+  } catch(e) { console.error(e); }
 }
 
 fetchStatuses();
