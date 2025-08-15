@@ -105,13 +105,22 @@ async function fetchStatuses() {
     tbody.innerHTML = '';
 
     data.forEach(row => {
-      const server = row.c[0]?.v || '';
-      const status = row.c[1]?.v || '';
-      const details = row.c[2]?.v || '';
-      if(server || status || details) {
-        tbody.innerHTML += `<tr><td>${server}</td><td>${status}</td><td>${details}</td></tr>`;
-      }
-    });
+  const server = row.c[0]?.v || '';
+  const status = row.c[1]?.v || '';
+  const details = row.c[2]?.v || '';
+
+  if(server || status || details) {
+    // Determine color: red if status contains "offline" (case-insensitive)
+    const color = status.toLowerCase().includes('offline') ? 'red' : 'inherit';
+
+    tbody.innerHTML += `<tr>
+      <td>${server}</td>
+      <td style="color: ${color}">${status}</td>
+      <td>${details}</td>
+    </tr>`;
+  }
+});
+
 
   } catch(e) {
     console.error(e);
