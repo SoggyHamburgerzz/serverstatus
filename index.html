@@ -60,9 +60,9 @@ tr:nth-child(even) {
 }
 
 /* Column widths inside table */
-th:nth-child(1), td:nth-child(1) { width: 10%; } /* Server column small */
-th:nth-child(2), td:nth-child(2) { width: 45%; } /* Status column */
-th:nth-child(3), td:nth-child(3) { width: 45%; } /* details column */
+th:nth-child(1), td:nth-child(1) { width: 10%; }
+th:nth-child(2), td:nth-child(2) { width: 45%; }
+th:nth-child(3), td:nth-child(3) { width: 45%; }
 </style>
 </head>
 <body>
@@ -78,7 +78,7 @@ th:nth-child(3), td:nth-child(3) { width: 45%; } /* details column */
       </tbody>
     </table>
     <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
-      Updated manually, DM @SoggyHamburgerzz on discord if this is wrong
+      Updated manually
     </p>
   </div>
 
@@ -97,9 +97,6 @@ const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
 const sheetName = 'Sheet1';
 const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&headers=1`;
 
-let previousData = [];
-let lastChange = new Date();
-
 async function fetchStatuses() {
   try {
     const res = await fetch(url);
@@ -110,37 +107,27 @@ async function fetchStatuses() {
     const tbody = document.querySelector('#statusTable tbody');
     tbody.innerHTML = '';
 
-    let changed = false;
-
-    data.forEach((row, i) => {
+    data.forEach((row) => {
       const server = row.c[0]?.v || '';
       const status = row.c[1]?.v || '';
       const details = row.c[2]?.v || '';
 
       if(server || status || details) {
         const color = status.toLowerCase().includes('offline') ? 'red' : 'inherit';
-
         tbody.innerHTML += `<tr>
           <td>${server}</td>
           <td style="color: ${color}">${status}</td>
           <td>${details}</td>
         </tr>`;
-
-        if(!previousData[i] || previousData[i].status !== status || previousData[i].details !== details) {
-          changed = true;
-        }
       }
     });
 
-    if(changed) lastChange = new Date();
-
-    document.getElementById('lastUpdated').textContent =
-      `Updated manually (last change: ${lastChange.toLocaleTimeString()})`;
-
-    previousData = data.map(row => ({
-      status: row.c[1]?.v || '',
-      details: row.c[2]?.v || ''
-    }));
+    // Pull last edited timestamp from column D (index 3)
+    const lastEditedRow = data.find(r => r.c[3]?.v);
+    if(lastEditedRow) {
+      document.getElementById('lastUpdated').textContent =
+        `Updated manually (last Google Sheet edit: ${lastEditedRow.c[3].v})`;
+    }
 
   } catch(e) {
     console.error(e);
