@@ -68,27 +68,26 @@ th:nth-child(3), td:nth-child(3) { width: 45%; } /* details column */
 <body>
 <div class="container">
   <div class="sidebar-left">
-  <h1>The Isle Servers</h1>
-  <table id="statusTable">
-    <thead>
-      <tr><th>Server</th><th>Status</th><th>Details</th></tr>
-    </thead>
-    <tbody>
-      <tr><td></td><td></td><td></td></tr> <!-- initial empty row -->
-    </tbody>
-  </table>
-  <p style="font-size: 0.8em; color: #aaa; margin-top: 1em;">
-    Updated manually, DM @SoggyHamburgerzz on discord if this is wrong
-  </p>
-</div>
+    <h1>The Isle Servers</h1>
+    <table id="statusTable">
+      <thead>
+        <tr><th>Server</th><th>Status</th><th>Details</th></tr>
+      </thead>
+      <tbody>
+        <tr><td></td><td></td><td></td></tr> <!-- initial empty row -->
+      </tbody>
+    </table>
+    <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
+      Updated manually, DM @SoggyHamburgerzz on discord if this is wrong
+    </p>
+  </div>
 
-  
   <div class="middle"></div>
-  
+
   <div class="sidebar-right">
     <h2>Useful Links</h2>
-    <a href="https://www.example.com" target="_blank">Example Site 1</a>
-    <a href="https://www.example2.com" target="_blank">Example Site 2</a>
+    <a href="https://www.example.com" target="_blank">Example Site 1</a><br>
+    <a href="https://www.example2.com" target="_blank">Example Site 2</a><br>
     <a href="https://www.example3.com" target="_blank">Example Site 3</a>
   </div>
 </div>
@@ -97,6 +96,9 @@ th:nth-child(3), td:nth-child(3) { width: 45%; } /* details column */
 const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
 const sheetName = 'Sheet1';
 const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&headers=1`;
+
+let previousData = [];
+let lastChange = new Date();
 
 async function fetchStatuses() {
   try {
@@ -108,23 +110,37 @@ async function fetchStatuses() {
     const tbody = document.querySelector('#statusTable tbody');
     tbody.innerHTML = '';
 
-    data.forEach(row => {
-  const server = row.c[0]?.v || '';
-  const status = row.c[1]?.v || '';
-  const details = row.c[2]?.v || '';
+    let changed = false;
 
-  if(server || status || details) {
-    // Determine color: red if status contains "offline" (case-insensitive)
-    const color = status.toLowerCase().includes('offline') ? 'red' : 'inherit';
+    data.forEach((row, i) => {
+      const server = row.c[0]?.v || '';
+      const status = row.c[1]?.v || '';
+      const details = row.c[2]?.v || '';
 
-    tbody.innerHTML += `<tr>
-      <td>${server}</td>
-      <td style="color: ${color}">${status}</td>
-      <td>${details}</td>
-    </tr>`;
-  }
-});
+      if(server || status || details) {
+        const color = status.toLowerCase().includes('offline') ? 'red' : 'inherit';
 
+        tbody.innerHTML += `<tr>
+          <td>${server}</td>
+          <td style="color: ${color}">${status}</td>
+          <td>${details}</td>
+        </tr>`;
+
+        if(!previousData[i] || previousData[i].status !== status || previousData[i].details !== details) {
+          changed = true;
+        }
+      }
+    });
+
+    if(changed) lastChange = new Date();
+
+    document.getElementById('lastUpdated').textContent =
+      `Updated manually (last change: ${lastChange.toLocaleTimeString()})`;
+
+    previousData = data.map(row => ({
+      status: row.c[1]?.v || '',
+      details: row.c[2]?.v || ''
+    }));
 
   } catch(e) {
     console.error(e);
