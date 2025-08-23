@@ -20,6 +20,22 @@ body {
   text-align: center;
 }
 
+/* Back button */
+.back-button {
+  display: inline-block;
+  margin-bottom: 1.5em;
+  padding: 0.5em 1em;
+  background: #333;
+  color: #e0e0e0;
+  text-decoration: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  transition: background 0.2s;
+}
+.back-button:hover {
+  background: #444;
+}
+
 /* Main alert box */
 #mainAlert {
   background: #3a0000;
@@ -63,6 +79,9 @@ tr:nth-child(even) {
 </head>
 <body>
   <div class="container">
+    <!-- Back button -->
+    <a href="index.html" class="back-button">⬅ Back to Servers</a>
+
     <h1>Hacker Reports</h1>
 
     <div id="mainAlert"></div>
