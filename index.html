@@ -74,53 +74,54 @@ th:nth-child(1), td:nth-child(1) { width: 10%; }
 th:nth-child(2), td:nth-child(2) { width: 45%; }
 th:nth-child(3), td:nth-child(3) { width: 45%; }
 
-/* Link card styles */
 .link-card {
-  display: flex;                 /* side-by-side image + text */
-  align-items: center;           /* vertical center */
+  display: flex;
+  flex-direction: row;           /* horizontal layout */
+  align-items: center;
   background: #2a2a2a;
   color: #e0e0e0;
   text-decoration: none;
-  padding: 0.5em 1em;
-  margin: 0.5em 0;
+  padding: 0.5em;
+  margin: 0.8em 0;
   border-radius: 8px;
   border: 1px solid #333;
   transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  max-width: 250px;             /* limit width */
-  height: 80px;                 /* fixed height */
-  overflow: hidden;
+  width: 100%;
 }
 
-.card-img {
-  height: 100%;                  /* fill card height */
-  width: auto;                   /* keep aspect ratio */
+.link-card:hover {
+  background: #333;
+  border-color: #555;
+  transform: translateY(-2px);
+}
+
+.link-card img {
+  height: 60px;                  /* fixed image height */
+  width: auto;
+  margin-right: 1em;             /* space between image and text */
   border-radius: 4px;
-  margin-right: 0.5em;           /* spacing between image & text */
-  flex-shrink: 0;
+  object-fit: contain;
 }
 
-.link-card-content {
+.link-card .link-text {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;        /* stack title + description */
   justify-content: center;
-  overflow: hidden;
 }
 
-.link-card-content h3 {
+.link-card h3 {
   margin: 0;
-  font-size: 0.9em;
+  font-size: 1em;
   color: #fff;
 }
 
-.link-card-content p {
+.link-card p {
   margin: 0;
-  font-size: 0.75em;
+  font-size: 0.85em;
   color: #aaa;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
+
 
 </style>
 </head>
@@ -158,9 +159,11 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
 </a>
 
 <a class="link-card" href="https://www.evrimaquickguide.com/" target="_blank">
-  <img src="images/evrimaquickguide.png" alt="Evrima Quick Guide preview" class="card-img">
-  <h3>Evrima Quick Guide</h3>
-  <p>Great guide website, almost functions as a wiki.</p>
+  <img src="images/evrima-guide.png" alt="Evrima Quick Guide preview">
+  <div class="link-text">
+    <h3>Evrima Quick Guide</h3>
+    <p>Great guide website, almost functions as a wiki.</p>
+  </div>
 </a>
 
   </div>
