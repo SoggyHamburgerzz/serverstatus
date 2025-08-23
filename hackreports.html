@@ -10,6 +10,7 @@ body {
   color: #e0e0e0;
   margin: 0;
   padding: 2em;
+  text-align: center;
 }
 
 /* Main alert box */
@@ -20,6 +21,7 @@ body {
   padding: 1em;
   margin-bottom: 1.5em;
   display: none;
+  text-align: left;
 }
 
 /* Table styling */
@@ -42,6 +44,14 @@ th {
 tr:nth-child(even) {
   background: #1a1a1a;
 }
+
+/* "No reports" text */
+#noReports {
+  font-size: 2em;
+  font-weight: bold;
+  margin-top: 2em;
+  display: none;
+}
 </style>
 </head>
 <body>
@@ -49,24 +59,26 @@ tr:nth-child(even) {
 
   <div id="mainAlert"></div>
 
-  <table id="reportsTable">
-    <thead>
-      <tr><th>Server</th><th>Issue</th><th>Details</th></tr>
-    </thead>
-    <tbody>
-      <tr><td></td><td></td><td></td></tr>
-    </tbody>
-  </table>
+  <div id="tableWrapper">
+    <table id="reportsTable">
+      <thead>
+        <tr><th>Server</th><th>Issue</th><th>Details</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div id="noReports">No reports!</div>
 
   <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
-    Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections.  
+    Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections.
     <span id="editedTime"></span>
   </p>
 
 <script>
 const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
 const reportsSheet = 'HackReports';
-const lastEditedSheet = 'LastEdited'; // same sheet you used on the other page
+const lastEditedSheet = 'LastEdited';
 
 const reportsUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${reportsSheet}&headers=1`;
 const lastEditedUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${lastEditedSheet}&headers=0`;
@@ -80,24 +92,28 @@ async function fetchReports() {
     const data = JSON.parse(jsonText).table.rows;
 
     const tbody = document.querySelector('#reportsTable tbody');
+    const tableWrapper = document.getElementById('tableWrapper');
+    const noReports = document.getElementById('noReports');
+    const mainAlert = document.getElementById('mainAlert');
     tbody.innerHTML = '';
+    mainAlert.style.display = 'none';
 
     let mainShown = false;
+    let validRows = 0;
 
     data.forEach((row) => {
       const server = row.c[0]?.v || '';
       const issue = row.c[1]?.v || '';
       const details = row.c[2]?.v || '';
-      const mainFlag = row.c[3]?.v || ''; // "Yes" marks the main alert
+      const mainFlag = row.c[3]?.v || '';
 
       if (server || issue || details) {
+        validRows++;
         if (mainFlag.toLowerCase() === 'yes' && !mainShown) {
-          const alertBox = document.getElementById('mainAlert');
-          alertBox.innerHTML = `<strong>⚠ Major Issue on ${server}:</strong> ${issue} - ${details}`;
-          alertBox.style.display = 'block';
+          mainAlert.innerHTML = `<strong>⚠ Major Issue on ${server}:</strong> ${issue} - ${details}`;
+          mainAlert.style.display = 'block';
           mainShown = true;
         }
-
         tbody.innerHTML += `<tr>
           <td>${server}</td>
           <td style="color:red; font-weight:bold;">${issue}</td>
@@ -105,6 +121,14 @@ async function fetchReports() {
         </tr>`;
       }
     });
+
+    if (validRows === 0) {
+      tableWrapper.style.display = 'none';
+      noReports.style.display = 'block';
+    } else {
+      tableWrapper.style.display = 'block';
+      noReports.style.display = 'none';
+    }
 
   } catch (e) {
     console.error(e);
