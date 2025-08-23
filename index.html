@@ -107,12 +107,14 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
 }
 
 .link-card img {
-  width: 80%;
-  height: auto;
+  width: 100%;        /* full card width */
+  height: 120px;      /* fixed height for uniform thumbnails */
+  object-fit: cover;  /* crops nicely */
+  border-radius: 8px 8px 0 0; /* rounded top corners only */
   display: block;
-  margin: 10px auto;  /* centers horizontally */
-  border-radius: 8px;
+  margin-bottom: 8px; /* space below image before text */
 }
+
 
 
 
@@ -152,12 +154,11 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
 </a>
 
 <a class="link-card" href="https://www.evrimaquickguide.com/" target="_blank">
-  <div class="card-content">
-    <h3>Evrima Quick Guide</h3>
-    <p>Great guide website, almost functions as a wiki.</p>
-    <img src="images/evrimaquickguide.png" alt="Evrima Quick Guide preview">
-  </div>
+  <img src="https://your-cdn-link.png" alt="Evrima Quick Guide preview">
+  <h3>Evrima Quick Guide</h3>
+  <p>Great guide website, almost functions as a wiki.</p>
 </a>
+
 
   </div>
 </div>
