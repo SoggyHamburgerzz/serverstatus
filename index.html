@@ -189,19 +189,30 @@ async function fetchStatuses() {
     tbody.innerHTML = '';
 
     data.forEach((row) => {
-      const server = row.c[0]?.v || '';
-      const status = row.c[1]?.v || '';
-      const details = row.c[2]?.v || '';
+  const server = row.c[0]?.v || '';
+  const status = row.c[1]?.v || '';
+  const details = row.c[2]?.v || '';
 
-      if(server || status || details) {
-        const color = status.toLowerCase().includes('offline') ? 'red' : 'inherit';
-        tbody.innerHTML += `<tr>
-          <td>${server}</td>
-          <td style="color: ${color}">${status}</td>
-          <td>${details}</td>
-        </tr>`;
-      }
-    });
+  if(server || status || details) {
+    // Default color for status
+    const color = status.toLowerCase().includes('offline') ? 'red' : 'inherit';
+
+    // Check if "hacker" appears anywhere (case-insensitive)
+    const hackerHighlight = 
+      server.toLowerCase().includes('hacker') || 
+      status.toLowerCase().includes('hacker') || 
+      details.toLowerCase().includes('hacker');
+
+    const rowStyle = hackerHighlight ? 'style="color: orange; font-weight: bold;"' : '';
+
+    tbody.innerHTML += `<tr ${rowStyle}>
+      <td>${server}</td>
+      <td style="color: ${color}">${status}</td>
+      <td>${details}</td>
+    </tr>`;
+  }
+});
+
 
     // Pull last edited timestamp from column D (index 3)
     const lastEditedRow = data.find(r => r.c[3]?.v);
