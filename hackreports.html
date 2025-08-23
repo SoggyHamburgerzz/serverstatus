@@ -10,6 +10,13 @@ body {
   color: #e0e0e0;
   margin: 0;
   padding: 2em;
+}
+
+/* Centered container */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2em;
   text-align: center;
 }
 
@@ -55,25 +62,27 @@ tr:nth-child(even) {
 </style>
 </head>
 <body>
-  <h1>Hacker Reports</h1>
+  <div class="container">
+    <h1>Hacker Reports</h1>
 
-  <div id="mainAlert"></div>
+    <div id="mainAlert"></div>
 
-  <div id="tableWrapper">
-    <table id="reportsTable">
-      <thead>
-        <tr><th>Server</th><th>Issue</th><th>Details</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div id="tableWrapper">
+      <table id="reportsTable">
+        <thead>
+          <tr><th>Server</th><th>Issue</th><th>Details</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div id="noReports">No reports!</div>
+
+    <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
+      Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections.
+      <span id="editedTime"></span>
+    </p>
   </div>
-
-  <div id="noReports">No reports!</div>
-
-  <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
-    Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections.
-    <span id="editedTime"></span>
-  </p>
 
 <script>
 const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
