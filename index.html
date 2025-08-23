@@ -188,26 +188,29 @@ async function fetchStatuses() {
     const tbody = document.querySelector('#statusTable tbody');
     tbody.innerHTML = '';
 
-    data.forEach((row) => {
-  const server = row.c[0]?.v || '';
-  const status = row.c[1]?.v || '';
-  const details = row.c[2]?.v || '';
+data.forEach((row) => {
+  let server = row.c[0]?.v || '';
+  let status = row.c[1]?.v || '';
+  let details = row.c[2]?.v || '';
 
-  if(server || status || details) {
-    // Default color for status
-    const color = status.toLowerCase().includes('offline') ? 'red' : 'inherit';
+  if (server || status || details) {
+    // Make "Offline" bold + red
+    const isOffline = status.toLowerCase().includes('offline');
+    if (isOffline) {
+      status = `<span style="color: red; font-weight: bold;">${status}</span>`;
+    }
 
-    // Check if "hacker" appears anywhere (case-insensitive)
-    const hackerHighlight = 
-      server.toLowerCase().includes('hacker') || 
-      status.toLowerCase().includes('hacker') || 
-      details.toLowerCase().includes('hacker');
+    // Highlight "hacker" anywhere in text, orange (not bold)
+    const highlightWord = (text) =>
+      text.replace(/hacker/gi, (match) => `<span style="color: orange;">${match}</span>`);
 
-    const rowStyle = hackerHighlight ? 'style="color: orange; font-weight: bold;"' : '';
+    server = highlightWord(server);
+    status = highlightWord(status);
+    details = highlightWord(details);
 
-    tbody.innerHTML += `<tr ${rowStyle}>
+    tbody.innerHTML += `<tr>
       <td>${server}</td>
-      <td style="color: ${color}">${status}</td>
+      <td>${status}</td>
       <td>${details}</td>
     </tr>`;
   }
