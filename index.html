@@ -190,8 +190,10 @@ async function fetchStatuses() {
         const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         const formatted = rawDate.toLocaleString('en-US', options);
 
-  document.getElementById('lastUpdated').textContent =
-    `Updated manually (last status update: ${formatted})\nDM @soggyhamburgerzz on discord if this info is wrong! :)`;
+  const el = document.getElementById('lastUpdated');
+el.textContent = `Updated manually (last status update: ${formatted})`;
+el.appendChild(document.createElement('br'));
+el.append('DM @soggyhamburgerzz on discord if this info is wrong! :)');
 
       }
     }
