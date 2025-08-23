@@ -80,7 +80,6 @@ tr:nth-child(even) {
 
     <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
       Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections.
-      <span id="editedTime"></span>
     </p>
   </div>
 
@@ -145,12 +144,18 @@ async function fetchReports() {
 }
 
 // Fetch last edited timestamp
-const lastEditedRow = data.find(r => r.c[3]?.v);
-    if (lastEditedRow) {
-      const match = lastEditedRow.c[3].v.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+async function fetchLastEdited() {
+  try {
+    const res = await fetch(lastEditedUrl);
+    const text = await res.text();
+    const jsonText = text.match(/google\.visualization\.Query\.setResponse\((.*)\)/s)[1];
+    const data = JSON.parse(jsonText).table.rows;
+
+    if (data.length > 0 && data[0].c[0]?.v) {
+      const match = data[0].c[0].v.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
       if (match) {
         const year = parseInt(match[1]);
-        const month = parseInt(match[2]); // 0-based in JS Date
+        const month = parseInt(match[2]);
         const day = parseInt(match[3]);
         const hour = parseInt(match[4]);
         const minute = parseInt(match[5]);
@@ -161,11 +166,10 @@ const lastEditedRow = data.find(r => r.c[3]?.v);
         const formatted = rawDate.toLocaleString('en-US', options);
 
         const el = document.getElementById('lastUpdated');
-        el.textContent = `Updated manually (last status update: ${formatted})`;
-        el.appendChild(document.createElement('br'));
-        el.append('DM @soggyhamburgerzz on discord if this info is wrong! :)');
+        el.textContent = `Reports updated manually (last update: ${formatted}). DM @SoggyHamburgerzz on Discord for corrections.`;
       }
-  catch (e) {
+    }
+  } catch (e) {
     console.error(e);
   }
 }
