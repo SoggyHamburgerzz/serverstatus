@@ -63,6 +63,32 @@ tr:nth-child(even) {
 th:nth-child(1), td:nth-child(1) { width: 10%; }
 th:nth-child(2), td:nth-child(2) { width: 45%; }
 th:nth-child(3), td:nth-child(3) { width: 45%; }
+
+/* Link card styling */
+.link-card {
+  display: block;
+  text-decoration: none;
+  background: #2a2a2a;
+  padding: 1em;
+  border-radius: 8px;
+  margin-bottom: 1em;
+  color: #e0e0e0;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.link-card:hover {
+  background: #333;
+  transform: translateY(-3px);
+}
+.link-card h3 {
+  margin: 0;
+  font-size: 1.1em;
+  color: #fff;
+}
+.link-card p {
+  margin: 0.3em 0 0;
+  font-size: 0.85em;
+  color: #aaa;
+}
 </style>
 </head>
 <body>
@@ -86,9 +112,18 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
 
   <div class="sidebar-right">
     <h2>Useful Links</h2>
-    <a href="https://www.example.com" target="_blank">Example Site 1</a><br>
-    <a href="https://www.example2.com" target="_blank">Example Site 2</a><br>
-    <a href="https://www.example3.com" target="_blank">Example Site 3</a>
+    <a href="https://www.example.com" target="_blank" class="link-card">
+      <h3>Example Site 1</h3>
+      <p>A general example site with useful info.</p>
+    </a>
+    <a href="https://www.example2.com" target="_blank" class="link-card">
+      <h3>Example Site 2</h3>
+      <p>Another helpful resource for players.</p>
+    </a>
+    <a href="https://www.example3.com" target="_blank" class="link-card">
+      <h3>Example Site 3</h3>
+      <p>Extra links and references you might need.</p>
+    </a>
   </div>
 </div>
 
@@ -123,13 +158,12 @@ async function fetchStatuses() {
     });
 
     // Pull last edited timestamp from column D (index 3)
-const lastEditedRow = data.find(r => r.c[3]?.v);
-if (lastEditedRow) {
-    // Expecting format: "Date(2025,7,15,15,54,0)"
-    const match = lastEditedRow.c[3].v.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
-    if (match) {
+    const lastEditedRow = data.find(r => r.c[3]?.v);
+    if (lastEditedRow) {
+      const match = lastEditedRow.c[3].v.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+      if (match) {
         const year = parseInt(match[1]);
-        const month = parseInt(match[2]); // 0-based in JS Date
+        const month = parseInt(match[2]);
         const day = parseInt(match[3]);
         const hour = parseInt(match[4]);
         const minute = parseInt(match[5]);
@@ -141,10 +175,8 @@ if (lastEditedRow) {
 
         document.getElementById('lastUpdated').textContent =
             `Updated manually (last Google Sheet edit: ${formatted})`;
+      }
     }
-}
-
-
 
   } catch(e) {
     console.error(e);
