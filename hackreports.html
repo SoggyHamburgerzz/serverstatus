@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hacker Reports</title>
+<style>
+body {
+  font-family: monospace;
+  background: #121212;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 2em;
+}
+
+/* Main alert box */
+#mainAlert {
+  background: #3a0000;
+  color: #ff5555;
+  border: 1px solid #ff0000;
+  padding: 1em;
+  margin-bottom: 1.5em;
+  display: none; /* hidden unless data exists */
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+}
+
+th, td {
+  border: 1px solid #333;
+  padding: 0.5em 1em;
+  text-align: center;
+}
+
+th {
+  background: #222;
+}
+
+tr:nth-child(even) {
+  background: #1a1a1a;
+}
+
+</style>
+</head>
+<body>
+  <h1>Hacker Reports</h1>
+
+  <div id="mainAlert"></div>
+
+  <table id="reportsTable">
+    <thead>
+      <tr><th>Server</th><th>Issue</th><th>Details</th></tr>
+    </thead>
+    <tbody>
+      <tr><td></td><td></td><td></td></tr> <!-- empty placeholder -->
+    </tbody>
+  </table>
+
+  <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
+    Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections.
+  </p>
+
+<script>
+const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
+const sheetName = 'HackReports'; // new sheet for hack reports
+const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${sheetName}&headers=1`;
+
+async function fetchReports() {
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    const jsonText = text.match(/google\.visualization\.Query\.setResponse\((.*)\)/s)[1];
+    const data = JSON.parse(jsonText).table.rows;
+
+    const tbody = document.querySelector('#reportsTable tbody');
+    tbody.innerHTML = '';
+
+    let mainShown = false;
+
+    data.forEach((row, i) => {
+      const server = row.c[0]?.v || '';
+      const issue = row.c[1]?.v || '';
+      const details = row.c[2]?.v || '';
+      const mainFlag = row.c[3]?.v || ''; // "main" column for top alert
+
+      if (server || issue || details) {
+        // Main alert if flagged
+        if (mainFlag.toLowerCase() === 'yes' && !mainShown) {
+          const alertBox = document.getElementById('mainAlert');
+          alertBox.innerHTML = `<strong>⚠ Major Issue on ${server}:</strong> ${issue} - ${details}`;
+          alertBox.style.display = 'block';
+          mainShown = true;
+        }
+
+        tbody.innerHTML += `<tr>
+          <td>${server}</td>
+          <td style="color:red; font-weight:bold;">${issue}</td>
+          <td>${details}</td>
+        </tr>`;
+      }
+    });
+
+    document.getElementById('lastUpdated').textContent =
+      `Reports updated: ${new Date().toLocaleString()}`;
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+fetchReports();
+setInterval(fetchReports, 60000);
+</script>
+</body>
+</html>
