@@ -89,7 +89,12 @@ tr:nth-child(even) {
     <div id="tableWrapper">
       <table id="reportsTable">
         <thead>
-          <tr><th>Server</th><th>Issue</th><th>Details</th></tr>
+          <tr>
+            <th>Server</th>
+            <th>Issue</th>
+            <th>Details</th>
+            <th>Time Reported</th>
+          </tr>
         </thead>
         <tbody></tbody>
       </table>
@@ -132,7 +137,8 @@ async function fetchReports() {
       const server = row.c[0]?.v || '';
       const issue = row.c[1]?.v || '';
       const details = row.c[2]?.v || '';
-      const mainFlag = row.c[3]?.v || '';
+      const timeReported = row.c[3]?.v || '';
+      const mainFlag = row.c[4]?.v || '';
 
       if (server || issue || details) {
         validRows++;
@@ -145,6 +151,7 @@ async function fetchReports() {
           <td>${server}</td>
           <td style="color:red; font-weight:bold;">${issue}</td>
           <td>${details}</td>
+          <td style="color:#aaa; font-size:0.9em;">${timeReported}</td>
         </tr>`;
       }
     });
