@@ -14,29 +14,38 @@ body {
 
 .container {
   display: flex;
-  width: 100%;
-  min-height: 100vh;
+  justify-content: center;   /* center everything horizontally */
+  padding: 2em 0;            /* breathing room top/bottom */
 }
 
-/* Left sidebar: table */
-.sidebar-left {
-  width: 25%;
+.center-wrapper {
+  display: flex;
+  width: 60%;                /* only takes up middle 60% */
+}
+
+.sidebar-left, .sidebar-right {
+  width: 50%;                /* each takes half of the wrapper = 30% of page */
   padding: 2em;
+  border-radius: 8px;
   background: #1a1a1a;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
-/* Middle empty space */
-.middle {
-  width: 50%;
-  background: #121212;
-}
-
-/* Right sidebar: links */
+/* Different shade for the right one */
 .sidebar-right {
-  width: 25%;
-  padding: 2em;
   background: #1e1e1e;
 }
+
+/* Make them visually "touch" */
+.sidebar-left {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.sidebar-right {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
 
 /* Table styling (card theme) */
 table {
@@ -199,6 +208,7 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
 
   </div>
 </div>
+
 
 
 <script>
