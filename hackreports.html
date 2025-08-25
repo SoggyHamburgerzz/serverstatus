@@ -227,32 +227,31 @@ async function fetchReports() {
     let mainShown = false;
     let validRows = 0;
 
-    data.forEach(row => {
-      // Map Form columns to table
-      const server = row.c[1]?.v || '';
-      const issue = row.c[2]?.v || '';
-      const details = row.c[3]?.v || '';
-      const timeReportedRaw = row.c[4]?.v || '';
-      const mainFlag = row.c[5]?.v || '';
+   data.forEach(row => {
+  const timeReportedRaw = row.c[0]?.v || ''; // Timestamp is column 0
+  const server = row.c[1]?.v || '';          // Server column 1
+  const issue = row.c[2]?.v || '';           // Issue column 2
+  const details = row.c[3]?.v || '';         // Details column 3
+  const mainFlag = row.c[4]?.v || '';        // Optional: major flag column 4
 
-      if (server || issue || details) {
-        validRows++;
-        if (mainFlag.toLowerCase() === 'yes' && !mainShown) {
-          mainAlert.innerHTML = `<strong>⚠ Major Issue on ${server}:</strong> ${issue} - ${details}`;
-          mainAlert.style.display = 'block';
-          mainShown = true;
-        }
+  if (server || issue || details) {
+    validRows++;
+    if (mainFlag.toLowerCase() === 'yes' && !mainShown) {
+      mainAlert.innerHTML = `<strong>⚠ Major Issue on ${server}:</strong> ${issue} - ${details}`;
+      mainAlert.style.display = 'block';
+      mainShown = true;
+    }
 
-        const timeReported = parseDate(timeReportedRaw);
+    const timeReported = parseDate(timeReportedRaw);
 
-        tbody.innerHTML += `<tr>
-          <td>${server}</td>
-          <td>${issue}</td>
-          <td>${details}</td>
-          <td>${timeReported}</td>
-        </tr>`;
-      }
-    });
+    tbody.innerHTML += `<tr>
+      <td>${server}</td>
+      <td>${issue}</td>
+      <td>${details}</td>
+      <td>${timeReported}</td>
+    </tr>`;
+  }
+});
 
     if (validRows === 0) {
       tableWrapper.style.display = 'none';
