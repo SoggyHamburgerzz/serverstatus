@@ -61,18 +61,27 @@ body::before {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-
-/* Table styling (card theme) */
+  
+  
+}
 table {
+  background: rgba(30,30,30,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: rgba(20,20,20,0.6); /* slightly lighter for visibility */
   border: 1px solid #333;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   color: #fff; /* table text white for visibility */
+}
+tr:nth-child(even) {
+  background: rgba(30,30,30,0.6);
+}
+tr:nth-child(odd) {
+  background: rgba(30,30,30,0.6);
 }
 
 th, td {
@@ -84,14 +93,6 @@ th {
   background: #333;
   color: #fff;
   font-weight: bold;
-}
-
-tr:nth-child(even) {
-  background: rgba(40,40,40,0.6);
-}
-
-tr:nth-child(odd) {
-  background: rgba(30,30,30,0.6);
 }
 
 /* Column widths inside table */
@@ -151,7 +152,6 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
 .hack-btn {
   display: block;
   text-align: center;
-  background: rgba(30,30,30,0.6);
   color: #e0e0e0;
   text-decoration: none;
   padding: 0.8em;
@@ -161,6 +161,9 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
   transition: all 0.2s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   font-weight: bold;
+  background: rgba(30,30,30,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .hack-btn:hover {
@@ -225,12 +228,14 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
   text-align: center;
   font-size: 0.75em;
   color: #aaa;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: rgba(30,30,30,0.5);
   border-radius: 8px;
   padding: 0.5em 1em;
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  background: rgba(30,30,30,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 ">
   Disclaimer: This site is unofficial and not affiliated with the developers of The Isle.
 </footer>
