@@ -136,7 +136,7 @@ td:nth-child(4) {
   display: none;
 }
 
-  /* Footer panel for last updated text */
+/* Footer panel for last updated text */
 #lastUpdatedPanel {
   width: 100%;
   background: rgba(30,30,30,0.6);
@@ -150,48 +150,54 @@ td:nth-child(4) {
   font-size: 0.8em;
   margin-top: 1em;
 }
-
 </style>
 </head>
 <body>
-  <div class="container">
+<div class="container">
 
-    <!-- Back button -->
-    <a href="index.html" class="back-button">Back to home</a>
+  <!-- Back button -->
+  <a href="index.html" class="back-button">Back to home</a>
 
-    <h1>Hacker Reports</h1>
+  <h1>Hacker Reports</h1>
 
-    <div class="panel">
-      <div id="mainAlert"></div>
+  <div class="panel">
+    <div id="mainAlert"></div>
 
-      <div id="tableWrapper">
-        <table id="reportsTable">
-          <thead>
-            <tr>
-              <th>Server</th>
-              <th>Issue</th>
-              <th>Details</th>
-              <th>Time Reported</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <div id="noReports">No reports!</div>
+    <div id="tableWrapper">
+      <table id="reportsTable">
+        <thead>
+          <tr>
+            <th>Server</th>
+            <th>Issue</th>
+            <th>Details</th>
+            <th>Time Reported</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
-    <div id="lastUpdatedPanel">
-      Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections, thanks :D
-    </div>
+    <div id="noReports">No reports!</div>
   </div>
 
+  <div id="lastUpdatedPanel">
+    Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections, thanks :D
+  </div>
+</div>
+
 <script>
-// Helper: safely convert Google Sheets Date(...) to readable format
+const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
+const reportsSheet = 'HackReports';
+const lastEditedSheet = 'LastEdited';
+
+const reportsUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${reportsSheet}&headers=1`;
+const lastEditedUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${lastEditedSheet}&headers=0`;
+
+// Convert Google Sheets Date(...) to human readable format
 function parseGoogleDate(dateStr) {
-  if (!dateStr) return ''; // empty cells
+  if (!dateStr) return '';
   const match = dateStr.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
-  if (!match) return dateStr; // fallback if not a proper date
+  if (!match) return dateStr;
   const [ , year, month, day, hour, minute, second ] = match.map(Number);
   const d = new Date(year, month, day, hour, minute, second);
   return d.toLocaleString('en-US', {
@@ -235,7 +241,6 @@ async function fetchReports() {
           mainShown = true;
         }
 
-        // Only parse if timeReported has the Date(...) format
         if (timeReported.startsWith('Date(')) {
           timeReported = parseGoogleDate(timeReported);
         }
@@ -283,9 +288,8 @@ fetchReports();
 fetchLastEdited();
 setInterval(fetchReports, 60000);
 setInterval(fetchLastEdited, 60000);
-
-
 </script>
 </body>
 </html>
+
 
