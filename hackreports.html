@@ -136,13 +136,21 @@ td:nth-child(4) {
   display: none;
 }
 
-/* Footer */
-#lastUpdated {
-  font-size: 0.8em;
-  color: #aaa;
-  margin-top: 1em;
+  /* Footer panel for last updated text */
+#lastUpdatedPanel {
+  width: 100%;
+  background: rgba(30,30,30,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 1em;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   text-align: center;
+  color: #aaa;
+  font-size: 0.8em;
+  margin-top: 1em;
 }
+
 </style>
 </head>
 <body>
@@ -173,9 +181,9 @@ td:nth-child(4) {
       <div id="noReports">No reports!</div>
     </div>
 
-    <p id="lastUpdated">
+    <div id="lastUpdatedPanel">
       Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections, thanks :D
-    </p>
+    </div>
   </div>
 
 <script>
