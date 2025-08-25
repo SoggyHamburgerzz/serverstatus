@@ -147,55 +147,59 @@ th:nth-child(3), td:nth-child(3) { width: 45%; }
 </head>
 <body>
 <div class="container">
-  <div class="sidebar-left">
-  <h1>The Isle Servers</h1>
-  <table id="statusTable">
-    <thead>
-      <tr><th>Server</th><th>Status</th><th>Details</th></tr>
-    </thead>
-    <tbody>
-      <tr><td></td><td></td><td></td></tr>
-    </tbody>
-  </table>
-  <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
-    Updated manually
-  </p>
+  <div class="center-wrapper">
 
-  <!-- Buttons for Hack Reports and Blacklist -->
-  <a href="hackreports.html" class="hack-btn">View Hack Reports</a>
-  <a href="blacklist.html" class="hack-btn">View Blacklist</a>
+    <!-- Left panel -->
+    <div class="sidebar-left">
+      <h1>The Isle Servers</h1>
+      <table id="statusTable">
+        <thead>
+          <tr><th>Server</th><th>Status</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td></td><td></td><td></td></tr>
+        </tbody>
+      </table>
+      <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
+        Updated manually
+      </p>
+
+      <!-- Buttons -->
+      <a href="hackreports.html" class="hack-btn">View Hack Reports</a>
+      <a href="blacklist.html" class="hack-btn">View Blacklist</a>
+    </div>
+
+    <!-- Right panel -->
+    <div class="sidebar-right">
+      <h2>Useful Links</h2>
+      <a class="link-card" href="https://discord.gg/survivetheisle" target="_blank">
+        <img src="images/discord.png" alt="Discord server icon">
+        <div class="link-text">
+          <h3>The Isle discord</h3>
+          <p>The official Isle discord server's link</p>
+        </div>
+      </a>
+
+      <a class="link-card" href="https://vulnona.com/game/map/#map=Gateway_v0.20" target="_blank">
+        <img src="images/vulnona.png" alt="Vulnona map preview">
+        <div class="link-text">
+          <h3>Vulnona Gateway Map</h3>
+          <p>A detailed map of Gateway, up to date unlike more popular maps</p>
+        </div>
+      </a>
+
+      <a class="link-card" href="https://www.evrimaquickguide.com/" target="_blank">
+        <img src="images/evrimaquickguide.png" alt="Evrima Quick Guide preview">
+        <div class="link-text">
+          <h3>Evrima Quick Guide</h3>
+          <p>Great guide website, almost functions as a wiki</p>
+        </div>
+      </a>
+    </div>
+
+  </div>
 </div>
 
-
-  <div class="middle"></div>
-
-  <div class="sidebar-right">
-    <h2>Useful Links</h2>
-    <a class="link-card" href="https://discord.gg/survivetheisle" target="_blank">
-  <img src="images/discord.png" alt="Discord server icon">
-  <div class="link-text">
-    <h3>The Isle discord</h3>
-    <p>The official Isle discord server's link</p>
-  </div>
-</a>
-
-<a class="link-card" href="https://vulnona.com/game/map/#map=Gateway_v0.20" target="_blank">
-  <img src="images/vulnona.png" alt="Vulnona map preview">
-  <div class="link-text">
-    <h3>Vulnona Gateway Map</h3>
-    <p>A detailed map of Gateway, up to date unlike more popular maps</p>
-  </div>
-</a>
-
-<a class="link-card" href="https://www.evrimaquickguide.com/" target="_blank">
-  <img src="images/evrimaquickguide.png" alt="Evrima Quick Guide preview">
-  <div class="link-text">
-    <h3>Evrima Quick Guide</h3>
-    <p>Great guide website, almost functions as a wiki</p>
-  </div>
-</a>
-  </div>
-</div>
 
 <script>
 const sheetID = '1kxRRcWFDufgGizcBwD65_EaGYceQlyAHoEkHxJP2nQI';
