@@ -6,18 +6,40 @@
 <style>
 body {
   font-family: monospace;
-  background: #121212;
-  color: #e0e0e0;
   margin: 0;
-  padding: 2em;
+  padding: 0;
+  color: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: url('./images/backdrop.png') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
 }
 
-/* Centered container */
+/* Dark overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 0;
+}
+
+/* Container */
 .container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 2em;
-  text-align: center;
+  width: 70%;
+  max-width: 1200px;
+  margin: 2em 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
 }
 
 /* Back button */
@@ -25,47 +47,84 @@ body {
   display: inline-block;
   margin-bottom: 1.5em;
   padding: 0.5em 1em;
-  background: #333;
+  background: rgba(30,30,30,0.6);
   color: #e0e0e0;
   text-decoration: none;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  transition: background 0.2s;
+  border-radius: 8px;
+  border: 1px solid #333;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: all 0.2s ease;
 }
 .back-button:hover {
-  background: #444;
+  background: rgba(50,50,50,0.6);
+  border-color: #555;
+  transform: translateY(-2px);
+}
+
+/* Panel for table & alerts */
+.panel {
+  width: 100%;
+  background: rgba(30,30,30,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 2em;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 /* Main alert box */
 #mainAlert {
-  background: #3a0000;
+  background: rgba(58,0,0,0.6);
   color: #ff5555;
   border: 1px solid #ff0000;
   padding: 1em;
-  margin-bottom: 1.5em;
   display: none;
   text-align: left;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
 /* Table styling */
 table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 1em;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(30,30,30,0.6);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  color: #fff;
 }
 
 th, td {
-  border: 1px solid #333;
-  padding: 0.5em 1em;
+  padding: 0.8em 1em;
   text-align: center;
 }
 
 th {
-  background: #222;
+  background: #333;
+  font-weight: bold;
 }
 
 tr:nth-child(even) {
-  background: #1a1a1a;
+  background: rgba(40,40,40,0.6);
+}
+
+tr:nth-child(odd) {
+  background: rgba(30,30,30,0.6);
+}
+
+td:nth-child(2) {
+  color: red;
+  font-weight: bold;
+}
+
+td:nth-child(4) {
+  color: #aaa;
+  font-size: 0.9em;
 }
 
 /* "No reports" text */
@@ -73,36 +132,48 @@ tr:nth-child(even) {
   font-size: 2em;
   font-weight: bold;
   margin-top: 2em;
+  color: #ff5555;
   display: none;
+}
+
+/* Footer */
+#lastUpdated {
+  font-size: 0.8em;
+  color: #aaa;
+  margin-top: 1em;
+  text-align: center;
 }
 </style>
 </head>
 <body>
   <div class="container">
+
     <!-- Back button -->
     <a href="index.html" class="back-button">Back to home</a>
 
     <h1>Hacker Reports</h1>
 
-    <div id="mainAlert"></div>
+    <div class="panel">
+      <div id="mainAlert"></div>
 
-    <div id="tableWrapper">
-      <table id="reportsTable">
-        <thead>
-          <tr>
-            <th>Server</th>
-            <th>Issue</th>
-            <th>Details</th>
-            <th>Time Reported</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+      <div id="tableWrapper">
+        <table id="reportsTable">
+          <thead>
+            <tr>
+              <th>Server</th>
+              <th>Issue</th>
+              <th>Details</th>
+              <th>Time Reported</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div id="noReports">No reports!</div>
     </div>
 
-    <div id="noReports">No reports!</div>
-
-    <p id="lastUpdated" style="font-size: 0.8em; color: #aaa; margin-top: 0.5em;">
+    <p id="lastUpdated">
       Reports updated manually. DM @SoggyHamburgerzz on Discord for corrections, thanks :D
     </p>
   </div>
@@ -115,7 +186,6 @@ const lastEditedSheet = 'LastEdited';
 const reportsUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${reportsSheet}&headers=1`;
 const lastEditedUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${lastEditedSheet}&headers=0`;
 
-// Fetch hacker reports
 async function fetchReports() {
   try {
     const res = await fetch(reportsUrl);
@@ -149,9 +219,9 @@ async function fetchReports() {
         }
         tbody.innerHTML += `<tr>
           <td>${server}</td>
-          <td style="color:red; font-weight:bold;">${issue}</td>
+          <td>${issue}</td>
           <td>${details}</td>
-          <td style="color:#aaa; font-size:0.9em;">${timeReported}</td>
+          <td>${timeReported}</td>
         </tr>`;
       }
     });
@@ -169,7 +239,6 @@ async function fetchReports() {
   }
 }
 
-// Fetch last edited timestamp
 async function fetchLastEdited() {
   try {
     const res = await fetch(lastEditedUrl);
@@ -207,3 +276,4 @@ setInterval(fetchLastEdited, 60000);
 </script>
 </body>
 </html>
+
