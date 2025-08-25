@@ -193,20 +193,21 @@ const lastEditedSheet = 'LastEdited';
 const reportsUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${reportsSheet}&headers=1`;
 const lastEditedUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?sheet=${lastEditedSheet}&headers=0`;
 
-// Convert Google Sheets Date(...) to human readable format
-function parseGoogleDate(dateStr) {
+// Convert Google Sheets Date(...) or Form date string to human readable format
+function parseDate(dateStr) {
   if (!dateStr) return '';
-  const match = dateStr.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
-  if (!match) return dateStr;
-  const [ , year, month, day, hour, minute, second ] = match.map(Number);
-  const d = new Date(year, month, day, hour, minute, second);
-  return d.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+  // Google Sheets Date(...) format
+  const gsMatch = dateStr.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+  if (gsMatch) {
+    const [ , y,m,d,H,M,S] = gsMatch.map(Number);
+    return new Date(y,m,d,H,M,S).toLocaleString('en-US',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  // Form date string format (e.g., 8/24/2025 11:10:00)
+  const fDate = new Date(dateStr);
+  if (!isNaN(fDate)) {
+    return fDate.toLocaleString('en-US',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  return dateStr;
 }
 
 async function fetchReports() {
@@ -227,11 +228,12 @@ async function fetchReports() {
     let validRows = 0;
 
     data.forEach(row => {
-      const server = row.c[0]?.v || '';
-      const issue = row.c[1]?.v || '';
-      const details = row.c[2]?.v || '';
-      let timeReported = row.c[3]?.v || '';
-      const mainFlag = row.c[4]?.v || '';
+      // Map Form columns to table
+      const server = row.c[1]?.v || '';
+      const issue = row.c[2]?.v || '';
+      const details = row.c[3]?.v || '';
+      const timeReportedRaw = row.c[4]?.v || '';
+      const mainFlag = row.c[5]?.v || '';
 
       if (server || issue || details) {
         validRows++;
@@ -241,9 +243,7 @@ async function fetchReports() {
           mainShown = true;
         }
 
-        if (timeReported.startsWith('Date(')) {
-          timeReported = parseGoogleDate(timeReported);
-        }
+        const timeReported = parseDate(timeReportedRaw);
 
         tbody.innerHTML += `<tr>
           <td>${server}</td>
@@ -275,9 +275,8 @@ async function fetchLastEdited() {
     const data = JSON.parse(jsonText).table.rows;
 
     if (data.length > 0 && data[0].c[0]?.v) {
-      const formatted = data[0].c[0].v.startsWith('Date(') ? parseGoogleDate(data[0].c[0].v) : data[0].c[0].v;
-      const el = document.getElementById('lastUpdatedPanel');
-      el.textContent = `Reports updated manually (last update: ${formatted}). DM @SoggyHamburgerzz on Discord for corrections.`;
+      const formatted = parseDate(data[0].c[0].v);
+      document.getElementById('lastUpdatedPanel').textContent = `Reports updated manually (last update: ${formatted}). DM @SoggyHamburgerzz on Discord for corrections.`;
     }
   } catch (e) {
     console.error(e);
@@ -291,5 +290,4 @@ setInterval(fetchLastEdited, 60000);
 </script>
 </body>
 </html>
-
 
