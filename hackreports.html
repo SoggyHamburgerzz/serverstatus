@@ -187,13 +187,20 @@ td:nth-child(4) {
   </div>
 
 <script>
-// Helper to convert Google Sheets Date(...) to readable format
+// Helper: safely convert Google Sheets Date(...) to readable format
 function parseGoogleDate(dateStr) {
+  if (!dateStr) return ''; // empty cells
   const match = dateStr.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
   if (!match) return dateStr; // fallback if not a proper date
   const [ , year, month, day, hour, minute, second ] = match.map(Number);
   const d = new Date(year, month, day, hour, minute, second);
-  return d.toLocaleString('en-US', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+  return d.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 async function fetchReports() {
@@ -228,8 +235,10 @@ async function fetchReports() {
           mainShown = true;
         }
 
-        // Convert Google Sheets date
-        timeReported = parseGoogleDate(timeReported);
+        // Only parse if timeReported has the Date(...) format
+        if (timeReported.startsWith('Date(')) {
+          timeReported = parseGoogleDate(timeReported);
+        }
 
         tbody.innerHTML += `<tr>
           <td>${server}</td>
@@ -261,7 +270,7 @@ async function fetchLastEdited() {
     const data = JSON.parse(jsonText).table.rows;
 
     if (data.length > 0 && data[0].c[0]?.v) {
-      const formatted = parseGoogleDate(data[0].c[0].v);
+      const formatted = data[0].c[0].v.startsWith('Date(') ? parseGoogleDate(data[0].c[0].v) : data[0].c[0].v;
       const el = document.getElementById('lastUpdatedPanel');
       el.textContent = `Reports updated manually (last update: ${formatted}). DM @SoggyHamburgerzz on Discord for corrections.`;
     }
@@ -274,6 +283,7 @@ fetchReports();
 fetchLastEdited();
 setInterval(fetchReports, 60000);
 setInterval(fetchLastEdited, 60000);
+
 
 </script>
 </body>
