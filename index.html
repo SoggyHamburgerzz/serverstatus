@@ -6,37 +6,37 @@
 <style>
 body {
   font-family: monospace;
+  margin: 0;
+  padding: 0;
+  /* Background image darkened */
   background: url('https://static.wikia.nocookie.net/isle/images/9/94/The_isle_most_recent_banner.png/revision/latest?cb=20200419135708') no-repeat center center fixed;
   background-size: cover;
+  position: relative;
   color: #e0e0e0;
-  margin: 0;
-  padding: 0;
-}
-  
-  font-family: monospace;
-  background: #121212;
-  color: #e0e0e0;
-  margin: 0;
-  padding: 0;
 }
 
-.container {
-  display: flex;
-  justify-content: center;   /* center everything horizontally */
-  padding: 2em 0;            /* breathing room top/bottom */
+/* Dark overlay to dim the background */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6); /* Adjust darkness */
+  z-index: 0;
 }
 
-.center-wrapper {
-  display: flex;
-  width: 60%;                /* only takes up middle 60% */
-}
-
+/* Frosted glass effect for panels */
 .sidebar-left, .sidebar-right {
-  width: 50%;                /* each takes half of the wrapper = 30% of page */
-  padding: 2em;
+  background: rgba(30, 30, 30, 0.5);  /* Semi-transparent */
+  backdrop-filter: blur(10px);       /* Frosted glass blur */
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
   border-radius: 8px;
-  background: #1a1a1a;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  padding: 2em;
+  z-index: 1; /* Make sure content is above the overlay */
+  color: #e0e0e0;
 }
 
 /* Different shade for the right one */
